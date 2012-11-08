@@ -1,3 +1,6 @@
 .x-tree-node .x-tree-selected {
     font-weight:bold;
 }
+.customTree .x-tree-node .x-tree-selected  {
+    font-weight: normal;
+}
