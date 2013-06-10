@@ -554,6 +554,7 @@ gxp.plugins.FeatureEditorPanel = Ext.extend(gxp.plugins.FeatureEditor, {
      */
     onLayerChange: function(mgr, layer, schema) {
         this.schema = schema;
+		this.supportAbstractGeometry = true;
         var disable = this.enableOrDisable();
         if (disable) {
             // not a wfs capable layer or not authorized
@@ -571,6 +572,9 @@ gxp.plugins.FeatureEditorPanel = Ext.extend(gxp.plugins.FeatureEditor, {
             "Surface": OpenLayers.Handler.Polygon
         };
         var simpleType = mgr.geometryType.replace("Multi", "");
+		if (simpleType=="Geometry") {
+			simpleType = layer.get('name').indexOf('poly') + 1 ? 'Polygon' : layer.get('name').indexOf('line') + 1? 'Line' : 'Point'
+		}
         var Handler = handlers[simpleType];
         if (Handler) {
             var multi = (simpleType != mgr.geometryType);
