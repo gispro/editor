@@ -66,8 +66,8 @@ gxp.plugins.FeatureEditorPanel = Ext.extend(gxp.plugins.FeatureEditor, {
     iconClsEdit: "gxp-icon-editfeature",
 
     /** i18n **/
-    exceptionTitle: "Save Failed",
-    exceptionText: "Trouble saving features",
+    exceptionTitle: "Ошибка",
+    exceptionText: "Произошла ошибка при сохранении",
     pointText: "Point",
     lineText: "Line",
     polygonText: "Polygon",
@@ -554,7 +554,7 @@ gxp.plugins.FeatureEditorPanel = Ext.extend(gxp.plugins.FeatureEditor, {
      */
     onLayerChange: function(mgr, layer, schema) {
         this.schema = schema;
-		this.supportAbstractGeometry = true;
+		//this.supportAbstractGeometry = true;
         var disable = this.enableOrDisable();
         if (disable) {
             // not a wfs capable layer or not authorized
@@ -563,7 +563,8 @@ gxp.plugins.FeatureEditorPanel = Ext.extend(gxp.plugins.FeatureEditor, {
         }
 
         var control = this.drawControl;
-        var button = this.winActions[0];
+        var button1 = this.winActions[0];
+		var button2 = this.winActions[1];
         var handlers = {
             "Point": OpenLayers.Handler.Point,
             "Line": OpenLayers.Handler.Path,
@@ -579,11 +580,20 @@ gxp.plugins.FeatureEditorPanel = Ext.extend(gxp.plugins.FeatureEditor, {
         if (Handler) {
             var multi = (simpleType != mgr.geometryType);
             this.setHandler(Handler, multi);
-            button.enable();
+            //if (this.supportAbstractGeometry === true) {
+			if (this.target.tools[this.featureManager].layerRecord.get('group')=='editable') {
+				button1.enable();
+				button2.enable();
+			} else {
+				button1.disable();
+				button2.disable();
+			} 
         } else if (this.supportAbstractGeometry === true && mgr.geometryType === 'Geometry') {
-            button.enable();
+            button1.enable();
+			button2.enable();
         } else {
-            button.disable();
+            button1.disable();
+			button2.disable();
         }
         this.fireEvent("layereditable", this, layer, true);
     },
